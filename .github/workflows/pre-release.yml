@@ -17,7 +17,6 @@ jobs:
       - uses: amannn/action-semantic-pull-request@0723387faaf9b38adef4775cd42cfd5155ed6017 # 5.5.3
         with:
           types: |
-            chore
             docs
             ci
             fix
@@ -43,6 +42,10 @@ jobs:
         run: terraform init
       - name: Run Tests
         run: terraform test
+        env:
+          TF_LOG: DEBUG
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
   terraform-docs:
     name: Terraform Docs
     runs-on: ubuntu-22.04

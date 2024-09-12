@@ -40,7 +40,7 @@ jobs:
         uses: bruceharrison1984/terraform-push-module@1.0.0 ## ensure using latest version
         with:
           serverUri: https://app.terraform.io ## can be replaced with TFE URL
-          organizationName: my-hcp-org
+          organizationName: jdefrank-org
           moduleName: ${{ github.event.repository.name }}
           authToken: ${{ secrets.TFE_TOKEN }} ## token should be securely stored in GitHub Secrets
           providerName: aws
