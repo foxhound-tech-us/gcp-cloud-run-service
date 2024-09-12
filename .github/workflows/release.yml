@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-22.04
+    outputs:
+      version_number: ${{ steps.release.outputs.new_release_version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+      - name: Release
+        id: release
+        uses: cycjimmy/semantic-release-action@cb425203a562475bca039ba4dbf90c7f9ac790f4 # v4.1.0
+        with:
+          semantic_version: 23.0.5
+          extra_plugins: |
+            @semantic-release/git@10.0.1
+            conventional-changelog-conventionalcommits@7.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  push-module:
+    name: Push Terraform Module
+    runs-on: ubuntu-22.04
+    needs: release
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+      - id: terraform-push-module
+        uses: bruceharrison1984/terraform-push-module@1.0.0 ## ensure using latest version
+        with:
+          serverUri: https://app.terraform.io ## can be replaced with TFE URL
+          organizationName: my-hcp-org
+          moduleName: ${{ github.event.repository.name }}
+          authToken: ${{ secrets.TFE_TOKEN }} ## token should be securely stored in GitHub Secrets
+          providerName: aws
+          versionString: ${{ needs.release.outputs.version_number }} ## source version from release plugin
+          isNoCode: "false"
+      ## optionally save the tarball to Github Artifacts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.terraform-push-module.outputs.moduleName }}@${{ steps.terraform-push-module.outputs.moduleVersion }}
+          path: ${{ steps.terraform-push-module.outputs.archiveFilepath }}

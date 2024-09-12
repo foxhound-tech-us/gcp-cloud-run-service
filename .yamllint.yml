@@ -1,0 +1,15 @@
+extends: relaxed
+
+rules:
+  empty-lines:
+    level: warning
+
+  indentation:
+    level: warning
+    spaces: 2
+
+  quoted-strings:
+    quote-type: double
+    required: only-when-needed
+
+  line-length: disable

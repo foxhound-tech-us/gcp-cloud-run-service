@@ -1,0 +1,67 @@
+name: Lint
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  actionlint:
+    name: GitHub Action Lint
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+      - name: Lint GitHub Actions Workflow Files
+        uses: docker://rhysd/actionlint@sha256:daa1edae4a6366f320b68abb60b74fb59a458c17b61938d3c62709d92b231558 # v1.6.27
+        with:
+          args: -color
+  yamllint:
+    name: YAML Lint
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+      - name: Setup Python
+        uses: actions/setup-python@v5.2.0
+        with:
+          python-version: 3.12
+      - name: Install yamllint
+        run: |
+          pip install --upgrade pip
+          pip install yamllint
+      - name: Lint YAML Files
+        run: |
+          yamllint .
+  terraform-fmt:
+    name: Terraform Format
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        with:
+          terraform_version: 1.8.0
+      - name: Lint Terraform Files
+        run: |
+          terraform fmt -recursive -check -diff
+  tflint:
+    name: TFLint
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        with:
+          terraform_version: 1.9.0
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: v0.53.0
+      - name: TFLint
+        run: |
+          tflint --init
+          tflint --recursive --format=compact
