@@ -157,6 +157,7 @@ variable "timeout_seconds" {
 variable "service_account_name" {
   type        = string
   description = " (Optional) Email address of the IAM service account associated with the revision of the service. The service account represents the identity of the running revision, and determines what permissions the revision has."
+  default     = null
 }
 
 variable "template_labels" {
