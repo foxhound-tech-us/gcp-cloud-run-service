@@ -50,9 +50,35 @@ terraform destroy
 ## Module Documentation
 
 <!-- BEGIN_TF_DOCS -->
+### Requirements
 
-{ .Content }
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~>1.9 |
 
+### Providers
+
+No providers.
+
+### Modules
+
+No modules.
+
+### Resources
+
+No resources.
+
+### Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_example_input"></a> [example\_input](#input\_example\_input) | (Optional) Example input variable | `string` | `""` | no |
+
+### Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_example"></a> [example](#output\_example) | This is an example output |
 <!-- END_TF_DOCS -->
 
 ## Standard Module Repository Docs
